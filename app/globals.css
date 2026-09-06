@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #FAF6F0;
+    --foreground: #2C1D11;
+  }
+
+  body {
+    background-color: #FAF6F0;
+    color: #2C1D11;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
+
+  /* Custom subtle scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #FAF5EC;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #DACAB5;
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #A98B68;
+  }
+}
+
+@layer utilities {
+  .glass-card {
+    background: rgba(253, 251, 247, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(218, 202, 181, 0.4);
+  }
+
+  .glass-card-dark {
+    background: rgba(44, 29, 17, 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(218, 202, 181, 0.15);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .wood-grain-subtle {
+    background-image: radial-gradient(rgba(111, 78, 55, 0.04) 1px, transparent 0);
+    background-size: 24px 24px;
+  }
+}
+
+/* Pulse animation for live order beacons */
+@keyframes beacon-ping {
+
+  75%,
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.animate-beacon {
+  animation: beacon-ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
