@@ -2635,7 +2635,7 @@
     "tablesCount": 18,
     "wifiName": "RonyCafeHut_Guest",
     "wifiPass": "cozycoffee2026",
-    "updatedAt": "2026-08-31T17:22:44.130Z"
+    "updatedAt": "2026-09-15T02:52:13.402Z"
   },
   "users": [
     {
@@ -2656,6 +2656,54 @@
     }
   ],
   "orders": [
+    {
+      "id": "RNY-5352",
+      "orderNumber": "5352",
+      "userId": "usr-cust-1",
+      "customer": {
+        "name": "Jordan Reed",
+        "email": "customer@example.com",
+        "phone": "+1 (555) 789-0123",
+        "type": "dine-in",
+        "tableNumber": "Table 7",
+        "deliveryAddress": ""
+      },
+      "items": [
+        {
+          "id": "c-5",
+          "name": "Artisan Cafe Latte",
+          "price": 6,
+          "quantity": 2,
+          "customization": {
+            "milk": "Oat Milk (+0.75)",
+            "size": "Large (16oz) (+0.85)"
+          },
+          "notes": "Extra hot with tulip latte art",
+          "itemTotal": 12
+        },
+        {
+          "id": "p-1",
+          "name": "Burrata Margherita Pizza",
+          "price": 15.5,
+          "quantity": 1,
+          "customization": {
+            "crust": "Regular Artisan Sourdough"
+          },
+          "itemTotal": 15.5
+        }
+      ],
+      "subtotal": 27.5,
+      "tax": 1.82,
+      "deliveryFee": 0,
+      "discount": 5.5,
+      "total": 23.82,
+      "status": "ready",
+      "paymentMethod": "card",
+      "specialInstructions": "Please bring water with lemon",
+      "estimatedPrepTime": "12-15 min",
+      "createdAt": "2026-09-15T02:52:12.781Z",
+      "updatedAt": "2026-09-15T02:52:13.030Z"
+    },
     {
       "id": "RNY-6687",
       "orderNumber": "6687",

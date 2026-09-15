@@ -16,7 +16,9 @@ import {
   ShieldCheck,
   CheckCircle2,
   Tag,
-  ChevronRight
+  ChevronRight,
+  Play,
+  Pause
 } from 'lucide-react';
 import MenuCard from '@/components/MenuCard';
 import FoodDetailModal from '@/components/FoodDetailModal';
@@ -45,6 +47,29 @@ export default function HomePage() {
     loadMenu();
   }, []);
 
+  const videoRef = React.useRef(null);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(true);
+
+  // Guarantee silence and autoplay for video
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = true;
+      videoRef.current.play().catch(() => {});
+    }
+  }, []);
+
+  const toggleVideoPlay = () => {
+    if (videoRef.current) {
+      if (videoRef.current.paused) {
+        videoRef.current.play();
+        setIsVideoPlaying(true);
+      } else {
+        videoRef.current.pause();
+        setIsVideoPlaying(false);
+      }
+    }
+  };
+
   // Filter sections
   const featuredItems = menuItems.filter(i => i.isBestseller || i.isPopular).slice(0, 4);
   const tabItems = menuItems.filter(i => i.category === activeTab).slice(0, 4);
@@ -54,134 +79,124 @@ export default function HomePage() {
   return (
     <div className="space-y-20 pb-20 overflow-hidden">
       {/* ==========================================
-          HERO SECTION
+          HERO SECTION WITH REPEATING BACKGROUND VIDEO
           ========================================== */}
-      <section className="relative pt-6 pb-12 sm:pb-20 lg:pt-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-            
-            {/* Hero Text */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="lg:col-span-7 space-y-6 text-center lg:text-left"
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 sm:pt-4">
+        <div className="relative rounded-[2.5rem] overflow-hidden shadow-warm-xl border border-cafe-200/80 bg-cafe-950 min-h-[580px] lg:min-h-[640px] flex items-center p-6 sm:p-10 lg:p-14">
+          {/* Background Video Layer covering the entire hero background */}
+          <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none select-none z-0">
+            <video
+              ref={videoRef}
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="auto"
+              poster="/ronihut_poster.jpg"
+              className="w-full h-full object-cover object-center scale-[1.01]"
             >
+              <source src="/Ronihut.mp4" type="video/mp4" />
+            </video>
+
+            {/* Dark warm espresso scrims for crystal-clear readability */}
+            <div className="absolute inset-0 bg-cafe-950/40" />
+            <div className="absolute inset-0 bg-gradient-to-r from-cafe-950/95 via-cafe-950/70 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-cafe-950/80 to-transparent" />
+            <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-cafe-950/60 to-transparent" />
+          </div>
+
+          {/* Foreground Hero Content */}
+          <div className="relative z-10 w-full grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+            
+            {/* Left Hero Text Column */}
+            <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
               {/* Cozy Pill Badge */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-cafe-200/80 shadow-warm-sm text-xs font-bold text-cafe-800">
-                <span className="w-2 h-2 rounded-full bg-caramel animate-pulse" />
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-sm text-xs font-bold text-cream-100">
+                <span className="w-2.5 h-2.5 rounded-full bg-caramel animate-pulse shadow-sm shadow-caramel" />
                 <span>Specialty Roastery & Kitchen Open Daily</span>
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-cafe-950 tracking-tight leading-[1.15]">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.14] drop-shadow-md">
                 Your cozy corner for{' '}
-                <span className="relative inline-block text-cafe-800 underline decoration-caramel/40 decoration-wavy decoration-2">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-caramel-light via-amber-200 to-caramel font-black">
                   good coffee
                 </span>
                 , good food & good moments.
               </h1>
 
-              <p className="text-base sm:text-lg text-cafe-700 max-w-xl mx-auto lg:mx-0 leading-relaxed font-normal">
+              <p className="text-base sm:text-lg text-cream-100/90 max-w-xl mx-auto lg:mx-0 leading-relaxed font-normal drop-shadow-sm">
                 Step inside RonyCafeHut. Warm lighting, the soothing aroma of single-origin espresso, blistered sourdough pizza, and flaky morning pastries crafted with patient devotion.
               </p>
 
               {/* CTAs */}
-              <div className="pt-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5">
+              <div className="pt-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
                 <Link
                   href="/menu"
-                  className="w-full sm:w-auto px-8 py-4 rounded-full bg-cafe-900 text-cream-100 font-bold text-sm hover:bg-cafe-800 transition-all shadow-warm-md flex items-center justify-center gap-2 group hover:scale-[1.02]"
+                  className="w-full sm:w-auto px-8 py-4 rounded-full bg-caramel hover:bg-caramel-dark text-cafe-950 font-extrabold text-sm transition-all shadow-warm-lg shadow-caramel/30 flex items-center justify-center gap-2.5 group hover:scale-[1.02] active:scale-[0.98]"
                 >
                   <span>Explore Menu (80+ Items)</span>
-                  <ArrowRight className="w-4 h-4 text-caramel-light group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-4 h-4 text-cafe-950 group-hover:translate-x-1 transition-transform" />
                 </Link>
 
                 <button
                   type="button"
                   onClick={() => setIsCartOpen(true)}
-                  className="w-full sm:w-auto px-7 py-4 rounded-full bg-white border border-cafe-200/80 text-cafe-900 font-bold text-sm hover:bg-cafe-50 transition-all shadow-warm-sm flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-7 py-4 rounded-full bg-white/15 hover:bg-white/25 text-white font-bold text-sm border border-white/30 backdrop-blur-md transition-all shadow-warm-sm flex items-center justify-center gap-2.5 hover:scale-[1.02] active:scale-[0.98]"
                 >
-                  <Coffee className="w-4 h-4 text-caramel" />
+                  <Coffee className="w-4 h-4 text-caramel-light" />
                   <span>Start an Order</span>
                 </button>
               </div>
 
               {/* Social Proof Badges */}
-              <div className="pt-6 border-t border-cafe-200/70 grid grid-cols-3 gap-4 max-w-lg mx-auto lg:mx-0 text-left">
+              <div className="pt-6 border-t border-white/20 grid grid-cols-3 gap-4 max-w-lg mx-auto lg:mx-0 text-left">
                 <div>
-                  <p className="text-xl sm:text-2xl font-extrabold text-cafe-900">4.9 ★</p>
-                  <p className="text-xs text-cafe-600 font-medium">1,200+ Reviews</p>
+                  <p className="text-xl sm:text-2xl font-extrabold text-white drop-shadow-sm">4.9 ★</p>
+                  <p className="text-xs text-cream-200/80 font-medium">1,200+ Reviews</p>
                 </div>
                 <div>
-                  <p className="text-xl sm:text-2xl font-extrabold text-cafe-900">80+</p>
-                  <p className="text-xs text-cafe-600 font-medium">Artisan Items</p>
+                  <p className="text-xl sm:text-2xl font-extrabold text-white drop-shadow-sm">80+</p>
+                  <p className="text-xs text-cream-200/80 font-medium">Artisan Items</p>
                 </div>
                 <div>
-                  <p className="text-xl sm:text-2xl font-extrabold text-cafe-900">48-Hr</p>
-                  <p className="text-xs text-cafe-600 font-medium">Slow Sourdough</p>
+                  <p className="text-xl sm:text-2xl font-extrabold text-white drop-shadow-sm">48-Hr</p>
+                  <p className="text-xs text-cream-200/80 font-medium">Slow Sourdough</p>
                 </div>
               </div>
-            </motion.div>
+            </div>
 
-            {/* Hero Visual Imagery */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.7, delay: 0.15 }}
-              className="lg:col-span-5 relative"
-            >
-              <div className="relative mx-auto max-w-md lg:max-w-none">
-                {/* Main Hero Photo */}
-                <div className="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden shadow-warm-xl border-4 border-white bg-cafe-200">
-                  <Image
-                    src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1000&q=80"
-                    alt="RonyCafeHut Warm Atmosphere"
-                    fill
-                    priority
-                    sizes="(max-width: 1024px) 100vw, 500px"
-                    className="object-cover hover:scale-105 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-cafe-950/60 via-transparent to-transparent" />
+            {/* Right Hero Column: Floating Badges that frame the video */}
+            <div className="lg:col-span-5 relative flex flex-col justify-between h-full min-h-[280px] lg:min-h-[400px] pointer-events-none">
+              {/* Top Floating Badge */}
+              <div className="self-end bg-cafe-950/70 backdrop-blur-md p-3.5 rounded-2xl border border-white/20 shadow-warm-xl flex items-center gap-3 pointer-events-auto hover:bg-cafe-950/80 transition-all">
+                <div className="w-10 h-10 rounded-xl bg-caramel/25 border border-caramel/30 flex items-center justify-center text-caramel-light shrink-0">
+                  <Coffee className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-white">Single Origin Roast</p>
+                  <p className="text-[11px] text-cream-200/80">Ethiopian & Colombian</p>
+                </div>
+              </div>
 
-                  {/* Caption inside image */}
-                  <div className="absolute bottom-6 left-6 right-6 text-cream-100">
-                    <p className="text-xs font-bold uppercase tracking-widest text-caramel-light">Velvet Quarter Cafe</p>
-                    <p className="text-lg font-bold">"A warm refuge for coffee aficionados & food lovers."</p>
-                  </div>
+              {/* Bottom Floating Card & Pastry Badge */}
+              <div className="self-start mt-auto space-y-3 pointer-events-auto">
+                <div className="bg-cafe-950/70 backdrop-blur-md p-4 rounded-2xl border border-white/20 shadow-warm-xl max-w-xs text-cream-100">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-caramel-light">Velvet Quarter Cafe</p>
+                  <p className="text-sm font-bold leading-snug text-white mt-0.5">"A warm refuge for coffee aficionados & food lovers."</p>
                 </div>
 
-                {/* Floating Badge 1: Top Rated Coffee */}
-                <motion.div
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.4 }}
-                  className="absolute -top-4 -left-4 sm:-left-8 bg-white/95 backdrop-blur-md p-3.5 rounded-2xl shadow-warm-lg border border-cafe-200 flex items-center gap-3"
-                >
-                  <div className="w-10 h-10 rounded-xl bg-cafe-100 flex items-center justify-center text-caramel">
-                    <Coffee className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-cafe-900">Single Origin Roast</p>
-                    <p className="text-[11px] text-cafe-600">Ethiopian & Colombian</p>
-                  </div>
-                </motion.div>
-
-                {/* Floating Badge 2: Fresh Morning Pastries */}
-                <motion.div
-                  initial={{ y: -20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.55 }}
-                  className="absolute -bottom-4 -right-4 sm:-right-6 bg-white/95 backdrop-blur-md p-3.5 rounded-2xl shadow-warm-lg border border-cafe-200 flex items-center gap-3"
-                >
-                  <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600">
+                <div className="bg-cafe-950/70 backdrop-blur-md p-3.5 rounded-2xl border border-white/20 shadow-warm-xl flex items-center gap-3 hover:bg-cafe-950/80 transition-all">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/25 border border-amber-400/30 flex items-center justify-center text-amber-300 shrink-0">
                     <Sparkles className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-cafe-900">Baked at 5:00 AM</p>
-                    <p className="text-[11px] text-cafe-600">Normandy AOP Butter</p>
+                    <p className="text-xs font-bold text-white">Baked at 5:00 AM</p>
+                    <p className="text-[11px] text-cream-200/80">Normandy AOP Butter</p>
                   </div>
-                </motion.div>
+                </div>
               </div>
-            </motion.div>
+
+            </div>
 
           </div>
         </div>
